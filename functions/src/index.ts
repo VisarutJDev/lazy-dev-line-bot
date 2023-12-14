@@ -19,15 +19,15 @@ import * as request from "request-promise";
 //   response.send("Hello from Firebase!");
 // });
 
-const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
+const LINE_MESSAGING_API = "https://api.line.me/v2/bot/message";
 const LINE_HEADER = {
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer xxxxx`
+  "Content-Type": "application/json",
+  "Authorization": `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
 };
 
 exports.LineBot = onRequest((req, res) => {
-    // logger.info("Hello logs!", { structuredData: true });
-  if (req.body.events[0].message.type !== 'text') {
+  // logger.info("Hello logs!", { structuredData: true });
+  if (req.body.events[0].message.type !== "text") {
     return;
   }
   reply(req.body);
@@ -35,17 +35,17 @@ exports.LineBot = onRequest((req, res) => {
 
 const reply = (bodyResponse: any) => {
   return request({
-    method: `POST`,
+    method: "POST",
     uri: `${LINE_MESSAGING_API}/reply`,
     headers: LINE_HEADER,
     body: JSON.stringify({
       replyToken: bodyResponse.events[0].replyToken,
       messages: [
         {
-          type: `text`,
-          text: bodyResponse.events[0].message.text
-        }
-	  ]
-    })
+          type: "text",
+          text: bodyResponse.events[0].message.text,
+        },
+	  ],
+    }),
   });
 };
