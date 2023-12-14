@@ -8,12 +8,44 @@
  */
 
 import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+// import * as logger from "firebase-functions/logger";
+import * as request from "request-promise";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
-export const helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
+// export const helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
+
+const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
+const LINE_HEADER = {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer xxxxx`
+};
+
+exports.LineBot = onRequest((req, res) => {
+    // logger.info("Hello logs!", { structuredData: true });
+  if (req.body.events[0].message.type !== 'text') {
+    return;
+  }
+  reply(req.body);
 });
+
+const reply = (bodyResponse: any) => {
+  return request({
+    method: `POST`,
+    uri: `${LINE_MESSAGING_API}/reply`,
+    headers: LINE_HEADER,
+    body: JSON.stringify({
+      replyToken: bodyResponse.events[0].replyToken,
+      messages: [
+        {
+          type: `text`,
+          text: bodyResponse.events[0].message.text
+        }
+	  ]
+    })
+  });
+};
