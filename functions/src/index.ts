@@ -10,6 +10,7 @@
 import {onRequest} from "firebase-functions/v2/https";
 // import * as logger from "firebase-functions/logger";
 import * as request from "request-promise";
+import { MessageDicision } from "./message-decision";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -41,11 +42,12 @@ const reply = (bodyResponse: any) => {
     body: JSON.stringify({
       replyToken: bodyResponse.events[0].replyToken,
       messages: [
-        {
-          type: "text",
-          text: bodyResponse.events[0].message.text,
-        },
-	  ],
+        MessageDicision(bodyResponse.events[0].message.text || ""),
+        // {
+        //   type: "text",
+        //   text: bodyResponse.events[0].message.text,
+        // },
+      ],
     }),
   });
 };
