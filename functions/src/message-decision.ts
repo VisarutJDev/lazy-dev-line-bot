@@ -1,15 +1,15 @@
-import { FlexCarouselBlog } from "./flex-carousel-blog";
-import { FlexGitHub } from "./flex-github";
-import { FlexPortfolio } from "./flex-portfolio";
-import { FlexResumeCV } from "./flex-resume-cv";
+import {flexCarouselBlog} from "./flex-carousel-blog";
+import {flexGitHub} from "./flex-github";
+import {flexPortfolio} from "./flex-portfolio";
+import {flexResumeCV} from "./flex-resume-cv";
 
-export const MessageDicision = (msg: string) => {
-    switch (msg.toLowerCase()) {
-        case 'port': return FlexPortfolio();
-        case 'medium': return FlexCarouselBlog();
-        case 'resume': return FlexResumeCV()
-        case 'cv': return FlexResumeCV();
-        case 'github': return FlexGitHub();
-        default: return `Line message ของ lazy-dev ในรองรับเพียงคำสั่ง port, medium, resume, cv, github เท่านั้น เพราะ lazy`;
-    }
-}
+export const messageDicision = (msg: string) => {
+  switch (msg.toLowerCase()) {
+  case "port": return flexPortfolio();
+  case "medium": return flexCarouselBlog();
+  case "resume": return flexResumeCV();
+  case "cv": return flexResumeCV();
+  case "github": return flexGitHub();
+  default: return "";
+  }
+};

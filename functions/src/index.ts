@@ -8,9 +8,9 @@
  */
 
 import {onRequest} from "firebase-functions/v2/https";
-// import * as logger from "firebase-functions/logger";
+import * as logger from "firebase-functions/logger";
 import * as request from "request-promise";
-import { MessageDicision } from "./message-decision";
+import {messageDicision} from "./message-decision";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -35,6 +35,12 @@ exports.LineBot = onRequest((req, res) => {
 });
 
 const reply = (bodyResponse: any) => {
+  const response = messageDicision(bodyResponse.events[0].message.text || "");
+  const message = {
+    type: "text",
+    text: `Line message ของ lazy-dev ในรองรับเพียงคำสั่ง \n
+port, medium, resume, cv, github เท่านั้น เพราะ lazy`,
+  };
   return request({
     method: "POST",
     uri: `${LINE_MESSAGING_API}/reply`,
@@ -42,12 +48,14 @@ const reply = (bodyResponse: any) => {
     body: JSON.stringify({
       replyToken: bodyResponse.events[0].replyToken,
       messages: [
-        MessageDicision(bodyResponse.events[0].message.text || ""),
-        // {
-        //   type: "text",
-        //   text: bodyResponse.events[0].message.text,
-        // },
+        response !== "" ? {
+          type: "flex",
+          altText: "This is a Flex Message",
+          contents: {...response},
+        } : message,
       ],
     }),
+  }).catch((err) => { // if rp.get rejects (e.g. 500), do this:
+    logger.error("err!" + err.message, {structuredData: true});
   });
 };
