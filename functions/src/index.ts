@@ -7,7 +7,8 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import {onRequest} from "firebase-functions/v2/https";
+import {RuntimeOptions, runWith} from "firebase-functions";
+// import {onRequest} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 import * as request from "request-promise";
 import {messageDicision} from "./message-decision";
@@ -25,8 +26,14 @@ const LINE_HEADER = {
   "Content-Type": "application/json",
   "Authorization": `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
 };
+const serverConfig: RuntimeOptions = {
+  memory: "128MB",
+  timeoutSeconds: 60,
+  minInstances: 0,
+  maxInstances: 10,
+};
 
-exports.LineBot = onRequest((req, res) => {
+exports.LineBot = runWith(serverConfig).https.onRequest((req, res) => {
   // logger.info("Hello logs!", { structuredData: true });
   if (req.body.events[0].message.type !== "text") {
     return;
