@@ -1,0 +1,30 @@
+swagger: '2.0'
+info:
+  title: lazy-gateway-config
+  description: Lazy dev portfolio chat bot
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: key
+    in: query
+paths:
+  /LineBot:
+    post:
+      summary: LineBot is a lazy-dev chatbot
+      consumes:
+      - application/json
+      operationId: LineBot
+      x-google-backend:
+        address:  https://us-central1-portfolio-6b550.cloudfunctions.net/LineBot
+      security:
+        - api_key: []
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string

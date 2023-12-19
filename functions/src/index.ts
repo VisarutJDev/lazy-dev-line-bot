@@ -31,10 +31,13 @@ const serverConfig: RuntimeOptions = {
   timeoutSeconds: 60,
   minInstances: 0,
   maxInstances: 10,
+  invoker: "private",
 };
 
 exports.LineBot = runWith(serverConfig).https.onRequest((req, res) => {
-  // logger.info("Hello logs!", { structuredData: true });
+  logger.info(`req => ${JSON.stringify(req.body)}`, {structuredData: true});
+  const fullUrl = req.protocol + "://" + req.get("Origin") + req.originalUrl;
+  logger.info(`called from ${fullUrl}`);
   if (req.body.events[0].message.type !== "text") {
     return;
   }
